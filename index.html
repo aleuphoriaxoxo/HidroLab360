@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HidroLab 360</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<canvas id="bgCanvas"></canvas>
+
+<!-- NAVBAR -->
+<nav id="navbar">
+<div class="logo">
+  <span class="logo-text">HidroLab <span>360</span></span>
+</div>
+
+  <div class="nav-controls">
+    <div class="lang-toggle">
+      <button class="lang-btn active" onclick="setLang('es')">ES</button>
+      <span>/</span>
+      <button class="lang-btn" onclick="setLang('en')">EN</button>
+    </div>
+    <button class="mode-btn" id="modeToggleBtn" onclick="toggleMode()" aria-label="Cambiar tema">🌚</button>
+  </div>
+</nav>
+
+
+<!-- HERO -->
+<section class="hero">
+  <canvas id="waveCanvas"></canvas>
+  <div class="hero-content">
+    <div class="hero-badge" data-es="Ciencias Básicas Aplicadas · TECSUP 2025" data-en="Applied Basic Sciences · TECSUP 2025"></div>
+
+    <div class="hero-logo-wrap">
+      <img src="assets/logo.png" alt="HidroLab 360" class="hero-logo" onerror="this.outerHTML='<h1>HidroLab<br><span class=&quot;gradient-text&quot;>360</span></h1>'">
+    </div>
+
+    <p class="hero-sub" data-es="Plataforma web interactiva para aprender Hidrostática y el Principio de Pascal — simulando, calculando y experimentando en tiempo real." data-en="Interactive web platform to learn Hydrostatics and Pascal's Principle — simulating, calculating and experimenting in real time."></p>
+    <button class="btn-primary" onclick="explorarSimulador()" data-es="Explorar Simulador" data-en="Explore Simulator">Explorar Simulador</button>
+  </div>
+</section>
+
+<!-- TABS -->
+<div class="tabs-wrapper" id="tabsWrapper">
+  <div class="tabs">
+    <button class="tab active" onclick="showTab('simulador')" data-es="🧪 Simulador" data-en="🧪 Simulator">🧪 Simulador</button>
+    <button class="tab" onclick="showTab('asistente')" data-es="🤖 Asistente IA" data-en="🤖 AI Assistant">🤖 Asistente IA</button>
+    <button class="tab" onclick="showTab('retos')" data-es="🎯 Retos" data-en="🎯 Challenges">🎯 Retos</button>
+    <button class="tab" onclick="showTab('disenador')" data-es="📄 Diseñador" data-en="📄 Designer">📄 Diseñador</button>
+    <button class="tab" onclick="showTab('acerca')" data-es="ℹ️ Acerca de" data-en="ℹ️ About">ℹ️ Acerca de</button>
+    <button class="tab" onclick="showTab('equipo')" data-es="👥 Equipo" data-en="👥 Team">👥 Equipo</button>
+  </div>
+</div>
+
+<!-- MÓDULO SIMULADOR -->
+<div class="tab-content active" id="tab-simulador">
+  <div class="module-card">
+    <h2 class="module-title" data-es="Prensa Hidráulica — Principio de Pascal" data-en="Hydraulic Press — Pascal's Principle">Prensa Hidráulica — Principio de Pascal</h2>
+
+    <!-- GUÍA INTEGRADA -->
+    <details class="guide-panel" open>
+      <summary data-es="📘 ¿Cómo usar este simulador?" data-en="📘 How to use this simulator?">📘 ¿Cómo usar este simulador?</summary>
+      <ol class="guide-steps">
+        <li data-es="Mueve los controles deslizantes para ajustar F₁ (fuerza de entrada) y las áreas A₁ y A₂ de los pistones." data-en="Move the sliders to adjust F₁ (input force) and the piston areas A₁ and A₂.">Mueve los controles deslizantes para ajustar F₁ (fuerza de entrada) y las áreas A₁ y A₂ de los pistones.</li>
+        <li data-es="Observa cómo la presión se transmite y se multiplica la fuerza de salida F₂." data-en="Watch how pressure is transmitted and the output force F₂ is multiplied.">Observa cómo la presión se transmite y se multiplica la fuerza de salida F₂.</li>
+        <li data-es="La presión se calcula con P = F₁/A₁ y la fuerza de salida con F₂ = P × A₂." data-en="Pressure is calculated as P = F₁/A₁ and output force as F₂ = P × A₂.">La presión se calcula con P = F₁/A₁ y la fuerza de salida con F₂ = P × A₂.</li>
+        <li data-es="¡Experimenta! Aumenta A₂ y verás cómo F₂ crece manteniendo la presión constante." data-en="Experiment! Increase A₂ and you'll see how F₂ grows while pressure stays constant.">¡Experimenta! Aumenta A₂ y verás cómo F₂ crece manteniendo la presión constante.</li>
+      </ol>
+    </details>
+
+    <div class="sim-grid">
+      <div class="sim-controls">
+        <div class="control-group">
+          <label>F₁ <span id="f1val">50</span> N</label>
+          <input type="range" min="10" max="300" value="50" id="f1" oninput="actualizarResultados()">
+        </div>
+        <div class="control-group">
+          <label>A₁ <span id="a1val">0.01</span> m²</label>
+          <input type="range" min="1" max="20" value="5" id="a1s" oninput="actualizarResultados()">
+        </div>
+        <div class="control-group">
+          <label>A₂ <span id="a2val">0.05</span> m²</label>
+          <input type="range" min="1" max="50" value="25" id="a2s" oninput="actualizarResultados()">
+        </div>
+        <div class="result-box">
+          <div class="result-item">
+            <span class="result-label" data-es="Presión" data-en="Pressure">Presión</span>
+            <span class="result-value" id="resultPresion">5000 Pa</span>
+          </div>
+          <div class="result-item">
+            <span class="result-label" data-es="Fuerza F₂" data-en="Force F₂">Fuerza F₂</span>
+            <span class="result-value accent2" id="resultF2">250 N</span>
+          </div>
+        </div>
+      </div>
+      <canvas id="simCanvas" width="420" height="300"></canvas>
+    </div>
+  </div>
+</div>
+
+<!-- MÓDULO ASISTENTE -->
+<div class="tab-content" id="tab-asistente">
+  <div class="module-card">
+    <h2 class="module-title" data-es="Asistente con Inteligencia Artificial" data-en="AI Assistant">Asistente con Inteligencia Artificial</h2>
+    <div class="ai-status"><span class="ai-dot"></span><span id="statusLabel">Listo.</span></div>
+    <div class="chat-history" id="chatHistory">
+      <div class="chat-message chat-assistant">
+        <div class="message-role" data-es="Asistente" data-en="Assistant">Asistente</div>
+        <div data-es="¡Hola! Soy tu asistente de Hidrostática. Pregúntame sobre el Principio de Pascal, prensa hidráulica, presión, fuerza o cualquier tema del simulador." data-en="Hi! I'm your Hydrostatics assistant. Ask me about Pascal's Principle, hydraulic press, pressure, force or any simulator topic.">¡Hola! Soy tu asistente de Hidrostática. Pregúntame sobre el Principio de Pascal, prensa hidráulica, presión, fuerza o cualquier tema del simulador.</div>
+      </div>
+    </div>
+    <div id="suggestionList" class="suggestions"></div>
+    <div class="input-row">
+      <select id="languageSelect"><option value="es">Español</option><option value="en">English</option></select>
+      <textarea id="chatInput" placeholder="Escribe tu pregunta sobre física de fluidos..."></textarea>
+      <button class="btn-primary" id="sendButton" data-es="Enviar →" data-en="Send →">Enviar →</button>
+    </div>
+  </div>
+</div>
+
+<!-- MÓDULO RETOS -->
+<div class="tab-content" id="tab-retos">
+  <div class="module-card">
+    <h2 class="module-title" data-es="Modo Retos" data-en="Challenge Mode">Modo Retos</h2>
+    <div class="reto-header-row">
+      <span class="reto-badge" id="retoBadge">Reto #1 — Fácil</span>
+      <span class="reto-progress" id="retoProgress">1 / 15</span>
+    </div>
+    <p class="reto-pregunta" id="retoPregunta">Cargando...</p>
+    <div class="reto-opciones" id="retoOpciones"></div>
+    <p class="feedback" id="retoFeedback"></p>
+    <div class="score-display">
+      <div class="score-item"><span class="score-num" id="puntaje">0</span><span class="score-label" data-es="Puntos" data-en="Points">Puntos</span></div>
+      <div class="score-item"><span class="score-num" id="correctas">0</span><span class="score-label" data-es="Correctas" data-en="Correct">Correctas</span></div>
+      <div class="score-item"><span class="score-num" id="intentos">0</span><span class="score-label" data-es="Intentos" data-en="Attempts">Intentos</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- MÓDULO DISEÑADOR -->
+<div class="tab-content" id="tab-disenador">
+  <div class="module-card">
+    <h2 class="module-title" data-es="Diseñador Hidráulico" data-en="Hydraulic Designer">Diseñador Hidráulico</h2>
+    <p class="module-desc" data-es="Ingresa el peso que deseas levantar y las áreas de los pistones para calcular la fuerza necesaria." data-en="Enter the weight you want to lift and piston areas to calculate the required force.">Ingresa el peso que deseas levantar y las áreas de los pistones para calcular la fuerza necesaria.</p>
+    <div class="designer-grid">
+      <div class="control-group">
+        <label data-es="Peso a levantar (N)" data-en="Weight to lift (N)">Peso a levantar (N)</label>
+        <input type="number" id="peso" placeholder="Ej: 500" class="designer-input">
+      </div>
+      <div class="control-group">
+        <label>A₁ (m²)</label>
+        <input type="number" id="area1d" placeholder="Ej: 0.01" class="designer-input">
+      </div>
+      <div class="control-group">
+        <label>A₂ (m²)</label>
+        <input type="number" id="area2d" placeholder="Ej: 0.05" class="designer-input">
+      </div>
+    </div>
+    <button class="btn-primary" onclick="calcularNecesario()" data-es="Calcular Sistema" data-en="Calculate System">Calcular Sistema</button>
+    <div class="result-box" id="resultado2" style="margin-top:1.5rem;display:none"></div>
+    <button class="btn-outline" id="btnPDF" onclick="generarPDF()" style="display:none;margin-top:1rem" data-es="Descargar Reporte PDF" data-en="Download PDF Report">Descargar Reporte PDF</button>
+  </div>
+</div>
+
+<!-- MÓDULO ACERCA DE -->
+<div class="tab-content" id="tab-acerca">
+  <div class="module-card">
+    <h2 class="module-title" data-es="Acerca de HidroLab 360" data-en="About HidroLab 360">Acerca de HidroLab 360</h2>
+    <p class="module-desc" data-es="HidroLab 360 es una plataforma educativa interactiva desarrollada para enseñar los principios de la Hidrostática y el Principio de Pascal de forma visual, dinámica y experimental." data-en="HidroLab 360 is an interactive educational platform developed to teach the principles of Hydrostatics and Pascal's Principle in a visual, dynamic and experimental way.">HidroLab 360 es una plataforma educativa interactiva desarrollada para enseñar los principios de la Hidrostática y el Principio de Pascal de forma visual, dinámica y experimental.</p>
+
+    <h3 class="about-subtitle" data-es="🎯 Objetivo" data-en="🎯 Objective">🎯 Objetivo</h3>
+    <p class="module-desc" data-es="Brindar a los estudiantes de Ciencias Básicas Aplicadas una herramienta que combine simulación, cálculo y gamificación para comprender los conceptos fundamentales de la física de fluidos." data-en="Provide Applied Basic Sciences students with a tool that combines simulation, calculation and gamification to understand the fundamental concepts of fluid physics.">Brindar a los estudiantes de Ciencias Básicas Aplicadas una herramienta que combine simulación, cálculo y gamificación para comprender los conceptos fundamentales de la física de fluidos.</p>
+
+    <h3 class="about-subtitle" data-es="🔬 Módulos" data-en="🔬 Modules">🔬 Módulos</h3>
+    <ul class="about-list">
+      <li><strong data-es="Simulador:" data-en="Simulator:">Simulador:</strong> <span data-es="Prensa hidráulica interactiva con visualización en tiempo real." data-en="Interactive hydraulic press with real-time visualization.">Prensa hidráulica interactiva con visualización en tiempo real.</span></li>
+      <li><strong data-es="Asistente IA:" data-en="AI Assistant:">Asistente IA:</strong> <span data-es="Resuelve tus dudas sobre física de fluidos al instante." data-en="Solve your fluid physics questions instantly.">Resuelve tus dudas sobre física de fluidos al instante.</span></li>
+      <li><strong data-es="Retos:" data-en="Challenges:">Retos:</strong> <span data-es="Pon a prueba tus conocimientos con 15 preguntas graduadas." data-en="Test your knowledge with 15 graduated questions.">Pon a prueba tus conocimientos con 15 preguntas graduadas.</span></li>
+      <li><strong data-es="Diseñador:" data-en="Designer:">Diseñador:</strong> <span data-es="Calcula sistemas hidráulicos y exporta reportes técnicos en PDF." data-en="Calculate hydraulic systems and export technical PDF reports.">Calcula sistemas hidráulicos y exporta reportes técnicos en PDF.</span></li>
+    </ul>
+
+    <h3 class="about-subtitle" data-es="🧪 Fundamento Teórico" data-en="🧪 Theoretical Foundation">🧪 Fundamento Teórico</h3>
+    <p class="module-desc" data-es="El Principio de Pascal establece que la presión aplicada a un fluido incompresible se transmite con igual intensidad en todas las direcciones. Esto permite multiplicar fuerzas mediante pistones de diferentes áreas: P = F₁/A₁ = F₂/A₂." data-en="Pascal's Principle states that pressure applied to an incompressible fluid is transmitted with equal intensity in all directions. This allows multiplying forces using pistons of different areas: P = F₁/A₁ = F₂/A₂.">El Principio de Pascal establece que la presión aplicada a un fluido incompresible se transmite con igual intensidad en todas las direcciones. Esto permite multiplicar fuerzas mediante pistones de diferentes áreas: P = F₁/A₁ = F₂/A₂.</p>
+  </div>
+</div>
+
+<!-- MÓDULO EQUIPO -->
+<div class="tab-content" id="tab-equipo">
+  <div class="module-card">
+    <h2 class="module-title" data-es="Nuestro Equipo" data-en="Our Team">Nuestro Equipo</h2>
+    <p class="module-desc" data-es="Estudiantes de Ciencias Básicas Aplicadas — TECSUP 2025" data-en="Applied Basic Sciences students — TECSUP 2025">Estudiantes de Ciencias Básicas Aplicadas — TECSUP 2025</p>
+    <div class="team-grid">
+      <div class="team-card"><div class="avatar">AV</div><div class="team-name">Villena Lermo, Alexia</div><div class="team-role" data-es="UI/UX & Estructura" data-en="UI/UX & Structure">UI/UX & Estructura</div></div>
+      <div class="team-card"><div class="avatar">JO</div><div class="team-name">Orellana Llasacce, Juan</div><div class="team-role" data-es="Simulador & Cálculos" data-en="Simulator & Calculations">Simulador & Cálculos</div></div>
+      <div class="team-card"><div class="avatar">LH</div><div class="team-name">Huaccachi Gutierrez, Leonardo</div><div class="team-role" data-es="Animaciones Canvas" data-en="Canvas Animations">Animaciones Canvas</div></div>
+      <div class="team-card"><div class="avatar">DB</div><div class="team-name">Benitez Lopez, Danilo</div><div class="team-role" data-es="Asistente IA" data-en="AI Assistant">Asistente IA</div></div>
+      <div class="team-card"><div class="avatar">GV</div><div class="team-name">Vilchez Armas, Gilbert</div><div class="team-role" data-es="Retos & Reportes" data-en="Challenges & Reports">Retos & Reportes</div></div>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <p>HidroLab 360 · <span>TECSUP</span> · Ciencias Básicas Aplicadas · 2025</p>
+</footer>
+
+<script src="animaciones.js"></script>
+<script src="simulador.js"></script>
+<script src="asistente.js"></script>
+<script src="retos.js"></script>
+<script src="main.js"></script>
+</body>
+</html>
